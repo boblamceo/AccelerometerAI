@@ -1,21 +1,28 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
-
+Adafruit_MPU6050 mpu;
+#define NUM_SAMPLES     50
 #define NUM_GESTURES    30
+#define G               9.80665f
+#define ACC_THRESHOLD   (2.5f*G)
+
 #define GESTURE_0       0
 #define GESTURE_1       1
-#define GESTURE_TARGET  GESTURE_0 
-//#define GESTURE_TARGET  GESTURE_1 
+// #define GESTURE_TARGET  GESTURE_0
+#define GESTURE_TARGET  GESTURE_1 
+int samplesRead   = NUM_SAMPLES;
+int gesturesRead  = 0;
+
 void setup() {
   Serial.begin(9600);
-  // while (!Serial) {
-  //   delay(10);
-  // }
-  // if (!mpu.begin()) {
-  //   while (1) {
-  //     delay(10);
-  //   }
-  // }
+  while (!Serial) {
+    delay(10);
+  }
+  if (!mpu.begin()) {
+    while (1) {
+      delay(10);
+    }
+  }
   
   // for (int i=0; i<NUM_SAMPLES; i++) {
   //   Serial.print("aX");
