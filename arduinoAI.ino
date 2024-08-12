@@ -1,13 +1,17 @@
-// Basic demo for accelerometer readings from Adafruit MPU6050
-
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
 Adafruit_MPU6050 mpu;
 
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+
 void setup(void) {
   Serial.begin(9600);
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.print("Hello World!");
   while (!Serial) {
     delay(10); // will pause Zero, Leonardo, etc until serial console opens
   }
