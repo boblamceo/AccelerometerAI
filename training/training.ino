@@ -1,3 +1,5 @@
+#include "Gesture Recognition_v1/user_app.h"
+
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 Adafruit_MPU6050 mpu;
@@ -5,6 +7,7 @@ Adafruit_MPU6050 mpu;
 #define NUM_GESTURES    30
 #define G               9.80665f
 #define ACC_THRESHOLD   (2.5f*G)
+#define GESTURE_ARRAY_SIZE  (6*NUM_SAMPLES+1) 
 
 #define GESTURE_0       0
 #define GESTURE_1       1
@@ -23,6 +26,12 @@ void setup() {
       delay(10);
     }
   }
+  if (!model_init()) {
+      Serial.print("Failed to initialize Neuton model!");
+      while (1) {
+        delay(10);
+      }
+   }
   
   // for (int i=0; i<NUM_SAMPLES; i++) {
   //   Serial.print("aX");
