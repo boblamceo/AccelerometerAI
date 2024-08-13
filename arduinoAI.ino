@@ -2,7 +2,7 @@
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 #define GESTURE_ARRAY_SIZE  (6*NUM_SAMPLES+1) 
-#include <neuton/neuton.h>
+#include "neuton/neuton.h"
 Adafruit_MPU6050 mpu;
 
 #include <LiquidCrystal.h>
