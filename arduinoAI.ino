@@ -1,9 +1,8 @@
-#include "Gesture Recognition/user_app.h"
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 #define GESTURE_ARRAY_SIZE  (6*NUM_SAMPLES+1) 
-
+#include <neuton/neuton.h>
 Adafruit_MPU6050 mpu;
 
 #include <LiquidCrystal.h>
@@ -11,6 +10,7 @@ LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
 
 void setup(void) {
   Serial.begin(9600);
+  neuton_nn_setup();
   lcd.begin(16, 2);
   // Print a message to the LCD.
   lcd.print("Hello World!");
@@ -41,7 +41,8 @@ void setup(void) {
 
 void loop() {
 sensors_event_t a, g, temp;
-   float gestureArray[GESTURE_ARRAY_SIZE]  = {0};
+   neuton_input_t gestureArray[GESTURE_ARRAY_SIZE] = {
+};
    // waiting
    while (samplesRead < NUM_SAMPLES) {
       mpu.getEvent(&a, &g, &temp);
@@ -56,22 +57,24 @@ sensors_event_t a, g, temp;
     
       delay(10);
       if (samplesRead == NUM_SAMPLES) {
-         uint32_t size_out = 0;
-      
-         float* result = model_run_inference(gestureArray,  
-                                             GESTURE_ARRAY_SIZE, 
-                                             &size_out);
-         if (result && size_out) {
-            if (size_out >= 2) { 
-               if (result[0] > 0.5) {
-                  Serial.print("Violin"); 
-               } else if (result[1] > 0.5) {
-                  Serial.print("Angry"); 
-               } else { 
-                  Serial.println("sleep");
-               } 
-            }
-         }
+         neuton_inference_input_t* p_input;
+p_input = neuton_nn_feed_inputs(gestureArray, neuton_nn_uniq_inputs_num() * neuton_nn_input_window_size());
+if (p_input)
+{
+    neuton_u16_t predicted_target;
+    neuton_output_t* probabilities;
+    neuton_i16_t outputs_num = neuton_nn_run_inference(p_input, &predicted_target, &probabilities);
+
+    if (outputs_num > 0)
+    {
+        Serial.println("Predicted target %d with probability %f\r\n", predicted_target, probabilities[predicted_target]);
+
+        Serial.println("All probabilities:\r\n");
+        for (size_t i = 0; i < outputs_num; i++)
+            Serial.println("%f," probabilities[i]);
+    }
+}
+
      }
    }
 }
