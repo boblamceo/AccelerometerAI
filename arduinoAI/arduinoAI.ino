@@ -2,7 +2,7 @@
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
-#include "Gesture Recognition_v1/user_app.h"
+#include "src/Gesture Recognition_v1/user_app.h"
 
 #define NUM_SAMPLES         50
 #define G                   9.80665f
@@ -76,18 +76,20 @@ sensors_event_t a, g, temp;
 
       if (result && size_out) {
         if (size_out >= 2) { 
-          if (result[0] > 0.5) {
-            Serial.print("Violin");
+          Serial.println("yup");
+          if (result[0] > result[1]) {
+            Serial.print("Punch");
             Serial.print("[Accuracy: ");
             Serial.print(result[0]);
             Serial.println("]");
-          } else if (result[1] > 0.5) {
-            Serial.print("Angry punch");
+          } else if (result[0] < result[1]) {
+            Serial.print("Violin");
             Serial.print("[Accuracy: ");
             Serial.print(result[1]);
             Serial.println("]");
-          } else {
-            Serial.println("nuh uh sleep");
+          }  else {
+            Serial.print("nuh uh");
+            
           }
         } else {
           Serial.println("not valid");
