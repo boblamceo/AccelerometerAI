@@ -78,11 +78,15 @@ sensors_event_t a, g, temp;
         if (size_out >= 2) { 
           Serial.println("yup");
           if (result[0] > result[1]) {
+            lcd.clear();
+            lcd.print("Punch");
             Serial.print("Punch");
             Serial.print("[Accuracy: ");
             Serial.print(result[0]);
             Serial.println("]");
           } else if (result[0] < result[1]) {
+            lcd.clear();
+            lcd.print("Violin");
             Serial.print("Violin");
             Serial.print("[Accuracy: ");
             Serial.print(result[1]);
